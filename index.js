@@ -20,13 +20,9 @@ connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n"); 
     start();
-    });
+});
 
-    connection.connect(function (err){
-        console.log("Connected as id: "+ connection.threadID);
-    });
-
-var start = function(){
+function start(){
         inquirer.prompt({
         type: "list", 
         choices: [
@@ -53,8 +49,8 @@ var start = function(){
                     addRole();
                     break;
                 case "Add Employee":
-                    break; 
                     addEmployee();
+                    break; 
                 case "View Department":
                     viewDepartment();
                     break;
@@ -77,7 +73,7 @@ var start = function(){
 
 
 
-
+//add Department Function
 function addDepartment(){
 
     inquirer.prompt({
@@ -87,28 +83,27 @@ function addDepartment(){
         name: "deptName"
     }).then(function(answer){
 
-        //this still needs works
-        connection.query("Insert into Department (name) VALUES (?) "), [answer.deptName], function (err,res){
+        connection.query("INSERT INTO department (name) VALUES (?) "), [answer.deptName], function (err,res){
             if (err) throw (err);
             console.table(res)
             start();
             
         }
     })
-}
-// start();
+};
 
+//add role function 
 function addRole() {
     inquirer.prompt([
         {
-            type: "List",
-            message: "Please select your role?", 
+            type: "list",
             choices: [
                 "Engineer",
                 "Finance",
                 "Legal",
                 "Sales"
             ],
+            message: "Please select your role?", 
             name: "addRoleTitle"
         },
         {
@@ -122,7 +117,7 @@ function addRole() {
             name: "deptID"
         }
     ]).then(function(answer){
-        connection.query("insert into role (x,y,z) values ???"), [answer.addRoleTitle, answer.salaryTot, answer.deptID], function( err, res){
+        connection.query("insert into role (title,salary,department_id) values (?,?,?)"), [answer.addRoleTitle, answer.salaryTot, answer.deptID], function( err, res){
             if (err) throw (err);
             console.table(answer);
             start();
@@ -130,6 +125,40 @@ function addRole() {
     })
 };
 
+//add employee function
+function addEmployee(){
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the Employee's First Name?",
+            name: "employeeFirstName"
+        },
+        {
+            type: "input",
+            message: "What is the Employee's Last Name?",
+            name: "employeeLastName"
+        },
+        {
+            type: "input",
+            message: "What is the Employee's Role?",
+            name: "roleID"
+        },
+        {
+            type: "input",
+            message: "What is the Employee Manager's Name?",
+            name: "managerID"
+        }
+    ])
+    .then(function(answer){
+
+        connection.query("INSERT INTO employee (firstname, lastname, role_id, manager_id) VALUES (?,?,?,?)", [answer.employeeFirstName, answer.employeeLastName, answer.roleID, answer.managerID], function (err, res){
+            if (err) throw err;
+            console.table(res);
+            start();
+        })
+    })
+}
+//update employee function 
 function viewDepartment() {
     let query ="SELECT * FROM department";
     connection.query(query, function(err,res){
@@ -160,16 +189,4 @@ function viewRoles() {
 function quit(){
     connection.end();
     process.exit();
-}
-//Variables Here, class and constructors: department, employee, manager
-
-
-//inquirer start "What do you want to do?"
-
-//inquirer CRUD
-
-//DB CRUD
-
-//seperate files for employee.js, manager.js, and DB CRUD.js
-
-//seed.sql
+};
