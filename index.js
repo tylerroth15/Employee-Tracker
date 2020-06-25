@@ -33,7 +33,7 @@ var start = function(){
             "Add Department",
             "Add Role",
             "Add Employee",
-            "View Departments",
+            "View Department",
             "View Roles", 
             "View Employees",
             "Update Employee Role", 
@@ -55,8 +55,8 @@ var start = function(){
                 case "Add Employee":
                     break; 
                     addEmployee();
-                case "View Departments":
-                    viewDepartments();
+                case "View Department":
+                    viewDepartment();
                     break;
                 case "View Roles":
                     viewRoles();
@@ -130,7 +130,37 @@ function addRole() {
     })
 };
 
+function viewDepartment() {
+    let query ="SELECT * FROM department";
+    connection.query(query, function(err,res){
+        if (err) throw err;
+        console.table(res);
+        start();
+    })
+}
 
+function viewEmployees() {
+    let query ="SELECT * FROM employee";
+    connection.query(query, function(err,res){
+        if (err) throw err;
+        console.table(res);
+        start();
+    })
+}
+
+function viewRoles() {
+    let query ="SELECT * FROM role";
+    connection.query(query, function(err,res){
+        if (err) throw err;
+        console.table(res);
+        start();
+    })
+}
+
+function quit(){
+    connection.end();
+    process.exit();
+}
 //Variables Here, class and constructors: department, employee, manager
 
 
