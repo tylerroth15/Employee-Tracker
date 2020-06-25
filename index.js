@@ -19,12 +19,13 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n"); 
-    createProduct();
+    start();
     });
 
     connection.connect(function (err){
         console.log("Connected as id: "+ connection.threadID);
     });
+
 var start = function(){
         inquirer.prompt({
         type: "list", 
@@ -72,7 +73,10 @@ var start = function(){
             }
         });
         
-    }
+    };
+
+
+
 
 function addDepartment(){
 
@@ -84,12 +88,15 @@ function addDepartment(){
     }).then(function(answer){
 
         //this still needs works
-        connection.query("Insert into Department (name) VALUES ? "), [answer.deptName], function (err, res){
+        connection.query("Insert into Department (name) VALUES (?) "), [answer.deptName], function (err,res){
             if (err) throw (err);
+            console.table(res)
+            start();
             
         }
     })
 }
+// start();
 
 function addRole() {
     inquirer.prompt([
@@ -102,6 +109,7 @@ function addRole() {
                 "Legal",
                 "Sales"
             ],
+            name: "addRoleTitle"
         },
         {
             type: "input",
@@ -114,10 +122,15 @@ function addRole() {
             name: "deptID"
         }
     ]).then(function(answer){
-
-        //connection.query("insert into role (x,y,z) values ???")
+        connection.query("insert into role (x,y,z) values ???"), [answer.addRoleTitle, answer.salaryTot, answer.deptID], function( err, res){
+            if (err) throw (err);
+            console.table(answer);
+            start();
+        }
     })
-}
+};
+
+
 //Variables Here, class and constructors: department, employee, manager
 
 
