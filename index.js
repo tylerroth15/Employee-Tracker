@@ -83,12 +83,13 @@ function addDepartment(){
         name: "deptName"
     }).then(function(answer){
 
-        connection.query("INSERT INTO department (name) VALUES (?) "), [answer.deptName], function (err,res){
+        connection.query("INSERT INTO department (name) VALUES (?) ", [answer.deptName], function (err,res){
             if (err) throw (err);
             console.table(res)
             start();
             
         }
+        )
     })
 };
 
@@ -117,11 +118,12 @@ function addRole() {
             name: "deptID"
         }
     ]).then(function(answer){
-        connection.query("insert into role (title,salary,department_id) values (?,?,?)"), [answer.addRoleTitle, answer.salaryTot, answer.deptID], function( err, res){
+        connection.query("insert into role (title ,salary ,department_id) values (?,?,?)", [answer.addRoleTitle, answer.salaryTot, answer.deptID], function( err, res){
             if (err) throw (err);
             console.table(answer);
             start();
         }
+        )
     })
 };
 
@@ -140,12 +142,12 @@ function addEmployee(){
         },
         {
             type: "input",
-            message: "What is the Employee's Role?",
+            message: "What is the Employee's Role ID Number?",
             name: "roleID"
         },
         {
             type: "input",
-            message: "What is the Employee Manager's Name?",
+            message: "What is the Employee Manager's ID Number?",
             name: "managerID"
         }
     ])
@@ -159,6 +161,27 @@ function addEmployee(){
     })
 }
 //update employee function 
+function updateEmployee(){
+    inquirer.prompt([
+        {
+            type:"Input",
+            message: "Which employee would you like to update?",
+            name: "empUpdate"
+        },
+        {
+           type: "input",
+            message: "What would you the Employee Role ID to be updated to?",
+            name: "updateRole"
+        }
+    ]).then(function(answer){
+        connection.query("UPDATE employee SET firstname=? WHERE role_id =?", [answer.empUpdate,answer.updateRole], function(err, res){
+            if (err) throw err;
+            console.table(res);
+            start();
+        })
+    })
+}
+
 function viewDepartment() {
     let query ="SELECT * FROM department";
     connection.query(query, function(err,res){
